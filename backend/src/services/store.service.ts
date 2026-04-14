@@ -104,12 +104,9 @@ export class StoreService {
   }
 
   generateDiscountCode(): GenerateDiscountCodeResult {
-    const completedOrderCount = this.orders.length;
-    const eligibleOrderCount =
-      Math.floor(completedOrderCount / this.config.nthOrderForDiscount) *
-      this.config.nthOrderForDiscount;
+    const eligibleOrderCount = this.nextUngeneratedEligibleOrderCount();
 
-    if (eligibleOrderCount === 0) {
+    if (!eligibleOrderCount) {
       return {
         generated: false,
         message: `No discount code is available yet. Complete ${this.ordersUntilNextDiscount()} more order(s) to unlock the next code.`
@@ -228,11 +225,35 @@ export class StoreService {
     return `BAZAAR-${orderCount}-${randomUUID().slice(0, 8).toUpperCase()}`;
   }
 
-  private ordersUntilNextDiscount(): number {
-    const remainder = this.orders.length % this.config.nthOrderForDiscount;
+  private nextUngeneratedEligibleOrderCount(): number | undefined {
+    for (
+      let orderCount = this.config.nthOrderForDiscount;
+      orderCount <= this.orders.length;
+      orderCount += this.config.nthOrderForDiscount
+    ) {
+      const alreadyGenerated = Array.from(this.discountCodes.values()).some(
+        (code) => code.generatedForOrderCount === orderCount
+      );
 
-    return remainder === 0
-      ? this.config.nthOrderForDiscount
-      : this.config.nthOrderForDiscount - remainder;
+      if (!alreadyGenerated) {
+        return orderCount;
+      }
+    }
+
+    return undefined;
+  }
+
+  private ordersUntilNextDiscount(): number {
+    const generatedMilestones = new Set(
+      Array.from(this.discountCodes.values()).map((code) => code.generatedForOrderCount)
+    );
+
+    let nextMilestone = this.config.nthOrderForDiscount;
+
+    while (generatedMilestones.has(nextMilestone)) {
+      nextMilestone += this.config.nthOrderForDiscount;
+    }
+
+    return Math.max(nextMilestone - this.orders.length, 0);
   }
 }

@@ -52,7 +52,7 @@ test("generates one coupon when nth-order condition is satisfied", () => {
   assert.equal(firstResult.discountCode?.percentage, 10);
   assert.equal(firstResult.discountCode?.generatedForOrderCount, 3);
   assert.equal(secondResult.generated, false);
-  assert.equal(firstResult.discountCode?.code, secondResult.discountCode?.code);
+  assert.equal(secondResult.discountCode, undefined);
 });
 
 test("generates the missed milestone coupon after later orders", () => {
@@ -67,6 +67,27 @@ test("generates the missed milestone coupon after later orders", () => {
 
   assert.equal(result.generated, true);
   assert.equal(result.discountCode?.generatedForOrderCount, 3);
+});
+
+test("generates outstanding milestone coupons in order", () => {
+  const store = createStore();
+
+  placeOrder(store);
+  placeOrder(store);
+  placeOrder(store);
+  placeOrder(store);
+  placeOrder(store);
+  placeOrder(store);
+
+  const firstResult = store.generateDiscountCode();
+  const secondResult = store.generateDiscountCode();
+  const thirdResult = store.generateDiscountCode();
+
+  assert.equal(firstResult.generated, true);
+  assert.equal(firstResult.discountCode?.generatedForOrderCount, 3);
+  assert.equal(secondResult.generated, true);
+  assert.equal(secondResult.discountCode?.generatedForOrderCount, 6);
+  assert.equal(thirdResult.generated, false);
 });
 
 test("applies a valid discount code once during checkout", () => {
@@ -95,6 +116,14 @@ test("rejects checkout with an invalid discount code", () => {
     () => store.checkout([{ productId: "a", quantity: 1 }], "MISSING-CODE"),
     Error
   );
+});
+
+test("rejects empty checkout and invalid cart items", () => {
+  const store = createStore();
+
+  assert.throws(() => store.checkout([]), /Cart is empty/);
+  assert.throws(() => store.checkout([{ productId: "a", quantity: 0 }]), /Quantity/);
+  assert.throws(() => store.checkout([{ productId: "missing", quantity: 1 }]), /Product/);
 });
 
 test("reports purchased item count, revenue, codes, and discounts", () => {

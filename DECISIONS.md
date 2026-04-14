@@ -34,7 +34,7 @@
 
 **Choice:** Option B.
 
-**Why:** This follows the requested admin API more directly. The checkout creates the condition, while the admin endpoint enforces whether a code can be generated. The endpoint returns a graceful `generated: false` response when the milestone has not been reached, and the implementation prevents duplicate codes for the same nth-order milestone.
+**Why:** This follows the requested admin API more directly. The checkout creates the condition, while the admin endpoint enforces whether a code can be generated. The endpoint returns a graceful `generated: false` response when no milestone is available, generates the oldest ungenerated milestone first when multiple milestones are due, and prevents duplicate codes for the same nth-order milestone.
 
 ## Decision: Make Discount Codes Single-Use
 

@@ -112,7 +112,7 @@ Content-Type: application/json
 POST /api/admin/discount-codes/generate
 ```
 
-A code is generated only when the total completed order count is a positive multiple of the configured interval. This project uses every 3rd order and a 10% discount. If the condition is not met, the endpoint still returns `200` with `generated: false` and a message explaining how many orders are needed.
+A code is generated for each ungenerated nth-order milestone. This project uses every 3rd order and a 10% discount, so completed orders 3, 6, 9, and so on each unlock one code. If the admin waits until multiple milestones are due, each API call generates the oldest ungenerated eligible code first. If no code is currently available, the endpoint still returns `200` with `generated: false` and a message explaining how many orders are needed.
 
 ### Admin Stats
 
