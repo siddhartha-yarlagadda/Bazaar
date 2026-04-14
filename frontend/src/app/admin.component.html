@@ -1,0 +1,54 @@
+<main class="shell admin-page">
+  <section class="intro admin-hero">
+    <div>
+      <p class="eyebrow">Admin</p>
+      <h1>Discounts, revenue, and checkout health in one place.</h1>
+      <p class="lede">Generate eligible coupon codes and keep an eye on store totals.</p>
+    </div>
+    <div class="admin-actions">
+      <button type="button" (click)="generateDiscountCode()">Generate discount code</button>
+      <button class="secondary" type="button" (click)="refreshStats()">Refresh stats</button>
+    </div>
+  </section>
+
+  <p class="notice success" *ngIf="message">{{ message }}</p>
+  <p class="notice error" *ngIf="error">{{ error }}</p>
+
+  <section class="stats" *ngIf="stats">
+    <div>
+      <span>Orders</span>
+      <strong>{{ stats.completedOrderCount }}</strong>
+    </div>
+    <div>
+      <span>Items purchased</span>
+      <strong>{{ stats.totalItemsPurchased }}</strong>
+    </div>
+    <div>
+      <span>Gross revenue</span>
+      <strong>{{ formatMoney(stats.grossRevenue) }}</strong>
+    </div>
+    <div>
+      <span>Discounts given</span>
+      <strong>{{ formatMoney(stats.totalDiscountGiven) }}</strong>
+    </div>
+    <div>
+      <span>Net revenue</span>
+      <strong>{{ formatMoney(stats.netRevenue) }}</strong>
+    </div>
+  </section>
+
+  <section class="codes">
+    <div class="section-heading">
+      <p class="eyebrow">Rewards</p>
+      <h2>Discount codes</h2>
+    </div>
+    <p class="empty" *ngIf="!stats?.discountCodes?.length">No discount codes generated yet.</p>
+    <div class="code-list" *ngIf="stats?.discountCodes?.length">
+      <div class="code-row" *ngFor="let code of stats?.discountCodes">
+        <code>{{ code.code }}</code>
+        <span>{{ code.percentage }}% off</span>
+        <span class="status-pill" [class.used]="code.used">{{ code.used ? "Used" : "Available" }}</span>
+      </div>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,12 @@
+<header class="topbar">
+  <a class="brand" routerLink="/">
+    <span>Bazaar</span>
+    <small>checkout studio</small>
+  </a>
+  <nav aria-label="Primary navigation">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Store</a>
+    <a routerLink="/admin" routerLinkActive="active">Admin</a>
+  </nav>
+</header>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,60 @@
+:host {
+  display: block;
+}
+
+.topbar {
+  align-items: center;
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.86);
+  border-bottom: 1px solid rgba(22, 66, 60, 0.12);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 14px max(20px, calc((100vw - 1180px) / 2));
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  color: #10231f;
+  display: grid;
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.brand span {
+  font-size: 1.24rem;
+}
+
+.brand small {
+  color: #d95032;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+nav {
+  background: #eef7f4;
+  border: 1px solid #d4e7df;
+  border-radius: 8px;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+}
+
+nav a {
+  border-radius: 6px;
+  color: #24433b;
+  font-size: 0.92rem;
+  font-weight: 800;
+  padding: 9px 14px;
+  text-decoration: none;
+}
+
+nav a.active {
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(31, 77, 68, 0.12);
+  color: #0f766e;
+}
